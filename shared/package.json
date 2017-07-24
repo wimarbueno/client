@@ -113,8 +113,8 @@
     "util": "0.10.3"
   },
   "devDependencies": {
-    "@storybook/react": "3.1.8",
-    "@storybook/react-native": "3.1.8",
+    "@storybook/react": "3.1.9",
+    "@storybook/react-native": "3.1.9",
     "babel-cli": "6.24.1",
     "babel-core": "6.24.1",
     "babel-eslint": "7.2.3",
