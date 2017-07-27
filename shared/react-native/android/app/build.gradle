@@ -117,6 +117,16 @@ android {
         }
     }
     buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+
+        }
+
+        storyBook.initWith(buildTypes.debug)
+        storyBook {
+            applicationIdSuffix ".storybook"
+        }
+
         release {
             signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
@@ -127,7 +137,6 @@ android {
         releaseUnsigned {
             signingConfig buildTypes.debug.signingConfig
         }
-
     }
     // applicationVariants are e.g. debug, release
     applicationVariants.all { variant ->
@@ -160,7 +169,8 @@ dependencies {
     // Manually include GIF support for Fresco b/c it was removed from
     // core library and RN doesn't auto add it back yet (RN 0.30.0)
     // @see DESKTOP-1703
-    compile 'com.facebook.fresco:animated-gif:0.11.0'
+    compile 'com.facebook.fresco:animated-base-support:0.14.1'
+    compile 'com.facebook.fresco:animated-gif:0.14.1'
     debugCompile 'com.hanhuy.android:viewserver:1.0.3'
     compile project(':keybaselib')
     testCompile 'junit:junit:4.12'
