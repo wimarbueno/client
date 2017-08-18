@@ -149,14 +149,21 @@ function* onInboxStale(): SagaGenerator<any, any> {
             .map((message: {ctime: number}) => message.ctime)
             .sort()
           const time = times && times.length > 0 && times[times.length - 1]
-
+          let teamname
+          let channelname
+          if (c.metadata.membersType === ChatTypes.CommonConversationMembersType.team) {
+            teamname = msgMax.tlfName
+            channelname = ' '
+          }
           return new Constants.InboxStateRecord({
             conversationIDKey: Constants.conversationIDToKey(c.metadata.conversationID),
             info: null,
             participants: List(parseFolderNameToUsers(author, msgMax.tlfName).map(ul => ul.username)),
+            channelname,
             snippet: ' ',
             state: 'untrusted',
             status: Constants.ConversationStatusByEnum[c.metadata.status || 0],
+            teamname,
             time,
           })
         })
@@ -165,6 +172,12 @@ function* onInboxStale(): SagaGenerator<any, any> {
 
     yield put(Creators.setInboxUntrustedState('loaded'))
     yield put(Creators.loadedInbox(conversations))
+
+    // Unbox teams so we can get their names
+    yield call(
+      unboxConversations,
+      conversations.filter(c => c.teamname).map(c => c.conversationIDKey).toArray()
+    )
 
     const {
       initialConversation,
@@ -401,8 +414,10 @@ function _conversationLocalToInboxState(c: ?ChatTypes.ConversationLocal): ?Const
     }))
     .first() || {}
 
-  // Temporary hack to make team convos easier to parse in inbox view
-  let parts = List(c.info.writerNames || [])
+  const parts = List(c.info.writerNames || [])
+  let teamname = null
+  let channelname = null
+
   if (c.info.membersType === ChatTypes.CommonConversationMembersType.team) {
     const topicName = validMaxMsgs
       .filter(m => [ChatTypes.CommonMessageType.metadata].includes(m.body && m.body.messageType))
@@ -410,17 +425,20 @@ function _conversationLocalToInboxState(c: ?ChatTypes.ConversationLocal): ?Const
         title: Constants.makeTeamTitle(message.body) || '<none>',
       }))
       .first() || {}
-    parts = List([`${topicName.title} ${c.info.tlfName}`])
+    teamname = c.info.tlfName
+    channelname = topicName.title
   }
 
   return new Constants.InboxStateRecord({
+    channelname,
     conversationIDKey,
     info: c.info,
     isEmpty: c.isEmpty,
-    participants: parts || [],
+    participants: parts,
     snippet: toShow.snippet,
     state: 'unboxed',
     status: Constants.ConversationStatusByEnum[c.info ? c.info.status : 0],
+    teamname,
     time: toShow.time || c.readerInfo.mtime,
   })
 }
