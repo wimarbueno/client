@@ -7,7 +7,7 @@ import {branch} from 'recompose'
 
 import Participants from './participants'
 
-import type {Props} from '.'
+import type {InfoPanelProps, ChannelInfoPanelProps} from '.'
 
 const border = `1px solid ${globalColors.black_05}`
 const containerStyle = isMobile
@@ -24,19 +24,50 @@ const containerStyle = isMobile
       overflowY: 'auto',
     }
 
-const _InfoPanel = (props: Props) => (
+const _InfoPanel = (props: InfoPanelProps) => (
   <ScrollView style={containerStyle}>
     <Box style={{...globalStyles.flexBoxColumn, alignItems: 'stretch'}}>
-      {props.channelname
-        ? <Text style={{alignSelf: 'center'}} type="BodySemibold">
-            #{props.channelname}
-          </Text>
-        : null}
-      {props.channelname
-        ? <Text style={{alignSelf: 'center'}} type="BodySmall">
-            {props.teamname}
-          </Text>
-        : null}
+      <Participants
+        participants={props.participants}
+        onAddParticipant={props.onAddParticipant}
+        onShowProfile={props.onShowProfile}
+      />
+
+      <Divider style={{marginBottom: 20, marginTop: 20}} />
+
+      <Box style={{...globalStyles.flexBoxRow, alignSelf: 'center'}}>
+        <Checkbox
+          checked={props.muted}
+          disabled={props.onMuteConversation == null}
+          onCheck={checked => props.onMuteConversation(checked)}
+          label="Mute notifications"
+        />
+        <Icon
+          type="iconfont-shh"
+          style={{
+            color: globalColors.black_20,
+            marginLeft: globalMargins.tiny,
+            ...(isMobile ? {fontSize: 24} : {}),
+          }}
+        />
+      </Box>
+
+      <Divider style={{marginBottom: 20, marginTop: 20}} />
+
+      <Button type="Danger" label="Block this conversation" onClick={props.onShowBlockConversationDialog} />
+    </Box>
+  </ScrollView>
+)
+
+const _ChannelInfoPanel = (props: ChannelInfoPanelProps) => (
+  <ScrollView style={containerStyle}>
+    <Box style={{...globalStyles.flexBoxColumn, alignItems: 'stretch'}}>
+      <Text style={{alignSelf: 'center'}} type="BodySemibold">
+        #{props.channelname}
+      </Text>
+      <Text style={{alignSelf: 'center'}} type="BodySmall">
+        {props.teamname}
+      </Text>
 
       <Participants
         participants={props.participants}
@@ -71,5 +102,6 @@ const _InfoPanel = (props: Props) => (
 )
 
 const InfoPanel = branch(() => isMobile, HeaderHoc)(_InfoPanel)
+const ChannelInfoPanel = branch(() => isMobile, HeaderHoc)(_ChannelInfoPanel)
 
-export default InfoPanel
+export {InfoPanel, ChannelInfoPanel}
