@@ -27,14 +27,18 @@ const containerStyle = isMobile
 const _InfoPanel = (props: Props) => (
   <ScrollView style={containerStyle}>
     <Box style={{...globalStyles.flexBoxColumn, alignItems: 'stretch'}}>
-    <Text style={{alignSelf: 'center'}} type="BodySemibold">
-      #{props.channelname}
-    </Text>
-    <Text style={{alignSelf: 'center'}} type="BodySmall">
-      {props.teamname}
-    </Text>
+      {props.channelname
+        ? <Text style={{alignSelf: 'center'}} type="BodySemibold">
+            #{props.channelname}
+          </Text>
+        : null}
+      {props.channelname
+        ? <Text style={{alignSelf: 'center'}} type="BodySmall">
+            {props.teamname}
+          </Text>
+        : null}
 
-    <Participants
+      <Participants
         participants={props.participants}
         onAddParticipant={props.onAddParticipant}
         onShowProfile={props.onShowProfile}
