@@ -7,7 +7,6 @@ import (
 	"encoding/hex"
 	"fmt"
 	"regexp"
-	"runtime/debug"
 	"sort"
 	"strings"
 
@@ -612,8 +611,6 @@ func parseImplicitTeamPart(ctx AssertionContext, s string) (typ string, name str
 		if CheckUsername.F(s) {
 			return "keybase", strings.ToLower(s), nil
 		}
-
-		debug.PrintStack()
 
 		return "", "", fmt.Errorf("Parsed part as keybase username, but invalid username (%q)", s)
 	}
