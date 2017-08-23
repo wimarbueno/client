@@ -770,7 +770,7 @@ func (t *Team) changeMembershipSection(ctx context.Context, req keybase1.TeamCha
 	section.PerTeamKey = perTeamKeySection
 
 	section.CompletedInvites = req.CompletedInvites
-
+	section.Implicit = t.chain().IsImplicit()
 	return section, secretBoxes, implicitAdminBoxes, memSet, nil
 }
 
