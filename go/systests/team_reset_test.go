@@ -355,7 +355,8 @@ func TestImplicitTeamUserReset(t *testing.T) {
 	G := alice.getPrimaryGlobalContext()
 	teams.NewTeamLoaderAndInstall(G)
 	team, err := teams.Load(context.TODO(), G, keybase1.LoadTeamArg{
-		ID: teamID,
+		ID:          teamID,
+		ForceRepoll: true,
 	})
 	require.NoError(t, err)
 
@@ -363,4 +364,10 @@ func TestImplicitTeamUserReset(t *testing.T) {
 
 	alice.addOwner(smuTeam{name: team.Name().String()}, bob)
 	divDebug(ctx, "Re-Added bob as an owner")
+
+	_, err = teams.Load(context.TODO(), G, keybase1.LoadTeamArg{
+		ID:          teamID,
+		ForceRepoll: true,
+	})
+	require.NoError(t, err)
 }
