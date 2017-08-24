@@ -17,7 +17,7 @@ import {branch} from 'recompose'
 
 import Participants from './participants'
 
-import type {InfoPanelProps, ChannelInfoPanelProps} from '.'
+import type {InfoPanelProps, BigTeamInfoPanelProps} from '.'
 
 const border = `1px solid ${globalColors.black_05}`
 const containerStyle = isMobile
@@ -69,7 +69,7 @@ const _InfoPanel = (props: InfoPanelProps) => (
   </ScrollView>
 )
 
-const _ChannelInfoPanel = (props: ChannelInfoPanelProps) => (
+const _BigTeamInfoPanel = (props: BigTeamInfoPanelProps) => (
   <ScrollView style={containerStyle}>
     <Box style={{...globalStyles.flexBoxColumn, alignItems: 'stretch'}}>
       <Text style={{alignSelf: 'center', marginTop: 20}} type="BodySemibold">
@@ -118,6 +118,6 @@ const _ChannelInfoPanel = (props: ChannelInfoPanelProps) => (
 )
 
 const InfoPanel = branch(() => isMobile, HeaderHoc)(_InfoPanel)
-const ChannelInfoPanel = branch(() => isMobile, HeaderHoc)(_ChannelInfoPanel)
+const BigTeamInfoPanel = branch(() => isMobile, HeaderHoc)(_BigTeamInfoPanel)
 
-export {InfoPanel, ChannelInfoPanel}
+export {InfoPanel, BigTeamInfoPanel}
