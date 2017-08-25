@@ -6,7 +6,8 @@ import {Map} from 'immutable'
 import {compose, renderComponent, branch} from 'recompose'
 import {connect} from 'react-redux'
 import {createSelector} from 'reselect'
-import {navigateAppend} from '../../../actions/route-tree'
+import {navigateAppend, navigateTo} from '../../../actions/route-tree'
+import {chatTab} from '../../../constants/tabs'
 import {showUserProfile} from '../../../actions/profile'
 
 import type {TypedState} from '../../../constants/reducer'
@@ -35,8 +36,8 @@ const getParticipants = createSelector(
 const mapStateToProps = (state: TypedState) => {
   const selectedConversationIDKey = Constants.getSelectedConversation(state)
   const inbox = Constants.getSelectedInbox(state)
-  const channelname = inbox ? inbox.get('channelname') : ''
-  const teamname = inbox ? inbox.get('teamname') : ''
+  const channelname = inbox.get('channelname')
+  const teamname = inbox.get('teamname')
   return {
     channelname,
     muted: Constants.getMuted(state),
@@ -47,6 +48,7 @@ const mapStateToProps = (state: TypedState) => {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch, {navigateUp}) => ({
+  navToRootChat: () => dispatch(navigateTo([], [chatTab])),
   onAddParticipant: (participants: Array<string>) => dispatch(Creators.newChat(participants)),
   onBack: () => dispatch(navigateUp()),
   onLeaveConversation: (conversationIDKey: Constants.ConversationIDKey) => {
@@ -72,12 +74,12 @@ const mergeProps = (stateProps, dispatchProps) => ({
   ...stateProps,
   ...dispatchProps,
   onAddParticipant: () => dispatchProps.onAddParticipant(stateProps.participants.map(p => p.username)),
-  onLeaveConversation: stateProps.selectedConversationIDKey &&
-    !Constants.isPendingConversationIDKey(stateProps.selectedConversationIDKey)
-    ? () =>
-        stateProps.selectedConversationIDKey &&
-        dispatchProps.onLeaveConversation(stateProps.selectedConversationIDKey)
-    : null,
+  onLeaveConversation: () => {
+    if (stateProps.selectedConversationIDKey) {
+      dispatchProps.onLeaveConversation(stateProps.selectedConversationIDKey)
+      dispatchProps.navToRootChat()
+    }
+  },
   onMuteConversation: stateProps.selectedConversationIDKey &&
     !Constants.isPendingConversationIDKey(stateProps.selectedConversationIDKey)
     ? (muted: boolean) =>
