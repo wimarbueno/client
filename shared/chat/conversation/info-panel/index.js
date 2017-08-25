@@ -104,7 +104,7 @@ const _BigTeamInfoPanel = (props: BigTeamInfoPanelProps) => (
 
       <Divider style={{marginBottom: 20, marginTop: 20}} />
 
-      <Button type="Danger" label="Leave channel" onClick={props.onLeaveConversation} />
+      <Button type="Danger" label="Leave channel" onClick={props.onLeaveConversation()} />
 
       <Divider style={{marginBottom: 20, marginTop: 20}} />
 
