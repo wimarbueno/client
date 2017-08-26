@@ -45,6 +45,10 @@ const _SmallTeamInfoPanel = (props: SmallTeamInfoPanelProps) => (
 
       <Divider style={{marginBottom: 20, marginTop: 20}} />
 
+      <Button type="Primary" label="Turn into team" onClick={props.onShowNewTeamDialog} />
+
+      <Divider style={{marginBottom: 20, marginTop: 20}} />
+
       <Box style={{...globalStyles.flexBoxRow, alignSelf: 'center'}}>
         <Checkbox
           checked={props.muted}
