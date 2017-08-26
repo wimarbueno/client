@@ -39,7 +39,7 @@ const _SmallTeamInfoPanel = (props: SmallTeamInfoPanelProps) => (
     <Box style={{...globalStyles.flexBoxColumn, alignItems: 'stretch'}}>
       <Participants
         participants={props.participants}
-        onAddParticipant={props.onAddParticipant}
+        onAddParticipant={props.showTeamButton ? null : props.onAddParticipant}
         onShowProfile={props.onShowProfile}
       />
 
